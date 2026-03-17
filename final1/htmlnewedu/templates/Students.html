@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students | EduRisk AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            color: #fbbf24;
+        }
+
+        nav {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .profile img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .page-subtitle {
+            color: #64748b;
+            margin-top: 0.5rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .stat-card.at-risk {
+            border-left-color: #ef4444;
+        }
+
+        .stat-card.safe {
+            border-left-color: #10b981;
+        }
+
+        .stat-card.monitor {
+            border-left-color: #f59e0b;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        /* Controls Section */
+        .controls-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .control-label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+
+        .control-input {
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .control-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        /* Risk Badge Styles */
+        .risk-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .risk-badge.safe {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .risk-badge.at-risk {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .risk-badge.monitor {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .table-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        .data-table th {
+            background: #f8fafc;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            user-select: none;
+        }
+
+        .data-table th:hover {
+            background: #f1f5f9;
+        }
+
+        .data-table th.sortable::after {
+            content: '↕';
+            margin-left: 0.5rem;
+            opacity: 0.5;
+        }
+
+        .data-table th.sorted-asc::after {
+            content: '↑';
+            opacity: 1;
+        }
+
+        .data-table th.sorted-desc::after {
+            content: '↓';
+            opacity: 1;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .data-table tbody tr {
+            transition: background-color 0.3s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .data-table tbody tr.at-risk {
+            background: #fef2f2;
+        }
+
+        .data-table tbody tr.at-risk:hover {
+            background: #fee2e2;
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #6b7280;
+            background: transparent;
+        }
+
+        .action-btn:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .action-btn.view {
+            color: #667eea;
+        }
+
+        .action-btn.view:hover {
+            background: #eff6ff;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .close {
+            color: #6b7280;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #374151;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .student-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-item {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .chart-container {
+            margin-top: 2rem;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .pagination-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            background: white;
+            color: #374151;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-btn:hover {
+            background: #f9fafb;
+            border-color: #9ca3af;
+        }
+
+        .pagination-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Loading States */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: #6b7280;
+        }
+
+        .spinner {
+            border: 2px solid #f3f4f6;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .table-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 2% auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                EduRisk AI
+            </div>
+            <nav>
+                <a href="{{ url_for('home') }}">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <a href="{{ url_for('dashboard') }}">
+                    <i class="fas fa-chart-bar"></i>
+                    Dashboard
+                </a>
+                <a href="{{ url_for('students') }}" style="background-color: rgba(255, 255, 255, 0.1);">
+                    <i class="fas fa-users"></i>
+                    Students
+                </a>
+                <a href="{{ url_for('reports') }}">
+                    <i class="fas fa-chart-line"></i>
+                    Reports
+                </a>
+                <a href="{{ url_for('settings') }}">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+                <a href="{{ url_for('help_page') }}">
+                    <i class="fas fa-question-circle"></i>
+                    Help
+                </a>
+                <a href="{{ url_for('logout') }}">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </nav>
+            <div class="profile">
+                <span>{{ session.get('name', 'John Doe') }}</span>
+                <img src="{{ session.get('photo', 'https://randomuser.me/api/portraits/men/32.jpg') }}" alt="Profile">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Student Management</h1>
+                <p class="page-subtitle">Monitor and analyze student performance data</p>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ students|length }}</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-card at-risk">
+                <div class="stat-number">{{ students|selectattr('Prediction', 'equalto', 'At Risk')|list|length }}</div>
+                <div class="stat-label">At Risk Students</div>
+            </div>
+            <div class="stat-card safe">
+                <div class="stat-number">{{ students|selectattr('Prediction', 'equalto', 'Not At Risk')|list|length }}</div>
+                <div class="stat-label">Safe Students</div>
+            </div>
+            <div class="stat-card monitor">
+                <div class="stat-number">{{ "%.1f"|format((students|selectattr('Prediction', 'equalto', 'At Risk')|list|length / students|length * 100) if students|length > 0 else 0) }}%</div>
+                <div class="stat-label">Risk Percentage</div>
+            </div>
+        </div>
+
+        <!-- Controls Section -->
+        <div class="controls-section">
+            <div class="controls-grid">
+                <div class="control-group">
+                    <label class="control-label">Search Students</label>
+                    <input type="text" id="searchInput" class="control-input" placeholder="Search by name, ID, or department...">
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Department Filter</label>
+                    <select id="departmentFilter" class="control-input">
+                        <option value="">All Departments</option>
+                        {% set departments = students|map(attribute='Department')|unique|list %}
+                        {% for dept in departments %}
+                        <option value="{{ dept }}">{{ dept }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Risk Level Filter</label>
+                    <select id="riskFilter" class="control-input">
+                        <option value="">All Risk Levels</option>
+                        <option value="At Risk">At Risk</option>
+                        <option value="Not At Risk">Safe</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Grade Filter</label>
+                    <select id="gradeFilter" class="control-input">
+                        <option value="">All Grades</option>
+                        {% set grades = students|map(attribute='Grade')|unique|list %}
+                        {% for grade in grades|sort %}
+                        <option value="{{ grade }}">{{ grade }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Actions</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button id="exportBtn" class="btn btn-success">
+                            <i class="fas fa-download"></i>
+                            Export CSV
+                        </button>
+                        <button id="clearFiltersBtn" class="btn btn-warning">
+                            <i class="fas fa-times"></i>
+                            Clear Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Container -->
+        <div class="table-container">
+            <div class="table-header">
+                <div class="table-title">Student Records</div>
+                <div class="table-actions">
+                    <span id="resultsCount">Showing {{ students|length }} students</span>
+                </div>
+            </div>
+            
+            <div class="table-wrapper">
+                <table class="data-table" id="studentsTable">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="Student_ID">Student ID</th>
+                            <th class="sortable" data-sort="First_Name">Name</th>
+                            <th class="sortable" data-sort="Department">Department</th>
+                            <th class="sortable" data-sort="Attendance">Attendance (%)</th>
+                            <th class="sortable" data-sort="Total_Score">Total Score</th>
+                            <th class="sortable" data-sort="Projects_Score">Projects</th>
+                            <th class="sortable" data-sort="Study_Hours_per_Week">Study Hours</th>
+                            <th class="sortable" data-sort="Grade">Grade</th>
+                            <th class="sortable" data-sort="Risk_Score">Risk Score</th>
+                            <th class="sortable" data-sort="Prediction">Risk Level</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody">
+                        {% for student in students %}
+                        <tr class="{% if student.Prediction == 'At Risk' %}at-risk{% endif %}" data-student-id="{{ student.Student_ID }}">
+                            <td>{{ student.Student_ID }}</td>
+                            <td>{{ student.First_Name }} {{ student.Last_Name }}</td>
+                            <td>{{ student.Department }}</td>
+                            <td>{{ "%.1f"|format(student['Attendance (%)']) }}%</td>
+                            <td>{{ "%.1f"|format(student.Total_Score) }}</td>
+                            <td>{{ "%.1f"|format(student.Projects_Score) }}</td>
+                            <td>{{ student.Study_Hours_per_Week }} hrs</td>
+                            <td>
+                                <span style="font-weight: 600; color: {% if student.Grade in ['F', 'D'] %}#ef4444{% elif student.Grade in ['C'] %}#f59e0b{% else %}#10b981{% endif %};">
+                                    {{ student.Grade }}
+                                </span>
+                            </td>
+                            <td>{{ "%.1f"|format(student.Risk_Score * 100) }}%</td>
+                            <td>
+                                <span class="risk-badge {% if student.Prediction == 'At Risk' %}at-risk{% elif student.Prediction == 'Not At Risk' %}safe{% else %}monitor{% endif %}">
+                                    {{ student.Prediction }}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="action-btn view" onclick="viewStudentDetails('{{ student.Student_ID }}')" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination">
+                <!-- Pagination will be generated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Details Modal -->
+    <div id="studentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Student Performance Details</h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentStudents = {{ students|tojson }};
+        let filteredStudents = [...currentStudents];
+        let currentPage = 1;
+        const studentsPerPage = 10;
+        let currentSort = { column: null, direction: 'asc' };
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTable();
+            setupEventListeners();
+            updateResultsCount();
+        });
+
+        function initializeTable() {
+            renderTable();
+            setupPagination();
+        }
+
+        function setupEventListeners() {
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                filterStudents();
+            });
+
+            // Filter functionality
+            document.getElementById('departmentFilter').addEventListener('change', filterStudents);
+            document.getElementById('riskFilter').addEventListener('change', filterStudents);
+            document.getElementById('gradeFilter').addEventListener('change', filterStudents);
+
+            // Clear filters
+            document.getElementById('clearFiltersBtn').addEventListener('click', clearFilters);
+
+            // Export functionality
+            document.getElementById('exportBtn').addEventListener('click', exportToCSV);
+
+            // Sort functionality
+            document.querySelectorAll('.sortable').forEach(header => {
+                header.addEventListener('click', function() {
+                    const column = this.dataset.sort;
+                    sortTable(column);
+                });
+            });
+        }
+
+        function filterStudents() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const departmentFilter = document.getElementById('departmentFilter').value;
+            const riskFilter = document.getElementById('riskFilter').value;
+            const gradeFilter = document.getElementById('gradeFilter').value;
+
+            filteredStudents = currentStudents.filter(student => {
+                const matchesSearch = !searchTerm || 
+                    student.Student_ID.toString().toLowerCase().includes(searchTerm) ||
+                    `${student.First_Name} ${student.Last_Name}`.toLowerCase().includes(searchTerm) ||
+                    student.Department.toLowerCase().includes(searchTerm);
+
+                const matchesDepartment = !departmentFilter || student.Department === departmentFilter;
+                const matchesRisk = !riskFilter || student.Prediction === riskFilter;
+                const matchesGrade = !gradeFilter || student.Grade === gradeFilter;
+
+                return matchesSearch && matchesDepartment && matchesRisk && matchesGrade;
+            });
+
+            currentPage = 1;
+            renderTable();
+            setupPagination();
+            updateResultsCount();
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('departmentFilter').value = '';
+            document.getElementById('riskFilter').value = '';
+            document.getElementById('gradeFilter').value = '';
+            filterStudents();
+        }
+
+        function sortTable(column) {
+            const direction = currentSort.column === column && currentSort.direction === 'asc' ? 'desc' : 'asc';
+            
+            // Update sort indicators
+            document.querySelectorAll('.sortable').forEach(header => {
+                header.classList.remove('sorted-asc', 'sorted-desc');
+            });
+            
+            const currentHeader = document.querySelector(`[data-sort="${column}"]`);
+            currentHeader.classList.add(direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
+
+            // Sort the data
+            filteredStudents.sort((a, b) => {
+                let aVal = a[column];
+                let bVal = b[column];
+
+                // Handle numeric values
+                if (column === 'Risk_Score' || column === 'Total_Score' || column === 'Projects_Score' || 
+                    column === 'Study_Hours_per_Week' || column === 'Attendance (%)') {
+                    aVal = parseFloat(aVal);
+                    bVal = parseFloat(bVal);
+                }
+
+                // Handle string values
+                if (typeof aVal === 'string') {
+                    aVal = aVal.toLowerCase();
+                    bVal = bVal.toLowerCase();
+                }
+
+                if (direction === 'asc') {
+                    return aVal > bVal ? 1 : -1;
+                } else {
+                    return aVal < bVal ? 1 : -1;
+                }
+            });
+
+            currentSort = { column, direction };
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('studentsTableBody');
+            const startIndex = (currentPage - 1) * studentsPerPage;
+            const endIndex = startIndex + studentsPerPage;
+            const pageStudents = filteredStudents.slice(startIndex, endIndex);
+
+            tbody.innerHTML = '';
+
+            if (pageStudents.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="11" class="empty-state">
+                            <i class="fas fa-search"></i>
+                            <p>No students found matching your criteria</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            pageStudents.forEach(student => {
+                const row = document.createElement('tr');
+                row.className = student.Prediction === 'At Risk' ? 'at-risk' : '';
+                row.dataset.studentId = student.Student_ID;
+
+                const riskBadgeClass = student.Prediction === 'At Risk' ? 'at-risk' : 
+                                     student.Prediction === 'Not At Risk' ? 'safe' : 'monitor';
+
+                const gradeColor = student.Grade in ['F', 'D'] ? '#ef4444' : 
+                                 student.Grade in ['C'] ? '#f59e0b' : '#10b981';
+
+                row.innerHTML = `
+                    <td>${student.Student_ID}</td>
+                    <td>${student.First_Name} ${student.Last_Name}</td>
+                    <td>${student.Department}</td>
+                    <td>${student['Attendance (%)'].toFixed(1)}%</td>
+                    <td>${student.Total_Score.toFixed(1)}</td>
+                    <td>${student.Projects_Score.toFixed(1)}</td>
+                    <td>${student.Study_Hours_per_Week} hrs</td>
+                    <td>
+                        <span style="font-weight: 600; color: ${gradeColor};">
+                            ${student.Grade}
+                        </span>
+                    </td>
+                    <td>${(student.Risk_Score * 100).toFixed(1)}%</td>
+                    <td>
+                        <span class="risk-badge ${riskBadgeClass}">
+                            ${student.Prediction}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="action-btn view" onclick="viewStudentDetails('${student.Student_ID}')" title="View Details">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function setupPagination() {
+            const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
+            const pagination = document.getElementById('pagination');
+            
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let paginationHTML = '';
+
+            // Previous button
+            paginationHTML += `
+                <button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} 
+                        onclick="changePage(${currentPage - 1})">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            `;
+
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                    paginationHTML += `
+                        <button class="pagination-btn ${i === currentPage ? 'active' : ''}" 
+                                onclick="changePage(${i})">
+                            ${i}
+                        </button>
+                    `;
+                } else if (i === currentPage - 3 || i === currentPage + 3) {
+                    paginationHTML += '<span>...</span>';
+                }
+            }
+
+            // Next button
+            paginationHTML += `
+                <button class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} 
+                        onclick="changePage(${currentPage + 1})">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            `;
+
+            pagination.innerHTML = paginationHTML;
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderTable();
+                setupPagination();
+            }
+        }
+
+        function updateResultsCount() {
+            const countElement = document.getElementById('resultsCount');
+            countElement.textContent = `Showing ${filteredStudents.length} of ${currentStudents.length} students`;
+        }
+
+        function exportToCSV() {
+            const headers = [
+                'Student ID', 'First Name', 'Last Name', 'Department', 
+                'Attendance (%)', 'Total Score', 'Projects Score', 
+                'Study Hours per Week', 'Grade', 'Risk Score', 'Risk Level'
+            ];
+
+            const csvContent = [
+                headers.join(','),
+                ...filteredStudents.map(student => [
+                    student.Student_ID,
+                    student.First_Name,
+                    student.Last_Name,
+                    student.Department,
+                    student['Attendance (%)'],
+                    student.Total_Score,
+                    student.Projects_Score,
+                    student.Study_Hours_per_Week,
+                    student.Grade,
+                    (student.Risk_Score * 100).toFixed(1),
+                    student.Prediction
+                ].join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `students_data_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function viewStudentDetails(studentId) {
+            const student = currentStudents.find(s => s.Student_ID == studentId);
+            if (!student) return;
+
+            const modal = document.getElementById('studentModal');
+            const modalBody = document.getElementById('modalBody');
+
+            modalBody.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Loading student details...
+                </div>
+            `;
+
+            modal.style.display = 'block';
+
+            // Simulate loading and then show student details
+            setTimeout(() => {
+                modalBody.innerHTML = `
+                    <div class="student-info">
+                        <div class="info-item">
+                            <div class="info-label">Student ID</div>
+                            <div class="info-value">${student.Student_ID}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Full Name</div>
+                            <div class="info-value">${student.First_Name} ${student.Last_Name}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Department</div>
+                            <div class="info-value">${student.Department}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Grade</div>
+                            <div class="info-value">${student.Grade}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Attendance</div>
+                            <div class="info-value">${student['Attendance (%)'].toFixed(1)}%</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Total Score</div>
+                            <div class="info-value">${student.Total_Score.toFixed(1)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Projects Score</div>
+                            <div class="info-value">${student.Projects_Score.toFixed(1)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Study Hours</div>
+                            <div class="info-value">${student.Study_Hours_per_Week} hrs/week</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Risk Score</div>
+                            <div class="info-value">${(student.Risk_Score * 100).toFixed(1)}%</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Risk Level</div>
+                            <div class="info-value">
+                                <span class="risk-badge ${student.Prediction === 'At Risk' ? 'at-risk' : 'safe'}">
+                                    ${student.Prediction}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <h4 style="margin-bottom: 1rem; color: #374151;">Performance Analysis</h4>
+                        <canvas id="performanceChart" width="400" height="200"></canvas>
+                    </div>
+                `;
+
+                // Create performance chart
+                const ctx = document.getElementById('performanceChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Attendance', 'Total Score', 'Projects', 'Study Hours', 'Risk Score'],
+                        datasets: [{
+                            label: 'Student Performance',
+                            data: [
+                                student['Attendance (%)'],
+                                student.Total_Score,
+                                student.Projects_Score,
+                                student.Study_Hours_per_Week * 10, // Scale for better visualization
+                                student.Risk_Score * 100
+                            ],
+                            backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                            borderColor: 'rgba(102, 126, 234, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(102, 126, 234, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(102, 126, 234, 1)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    stepSize: 20
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }, 500);
+        }
+
+        function closeModal() {
+            document.getElementById('studentModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('studentModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

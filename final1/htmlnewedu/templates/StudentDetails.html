@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Student Details</h1>
+        <a href="{{ url_for('students') }}" class="text-blue-500 hover:text-blue-700">
+            <i class="fas fa-arrow-left mr-1"></i> Back to Students
+        </a>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex justify-between items-start mb-8">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">{{ student.First_Name }} {{ student.Last_Name }}</h2>
+                <p class="text-gray-600">{{ student.Department }}</p>
+                <p class="text-gray-600">Student ID: {{ student.Student_ID }}</p>
+            </div>
+            <div class="flex items-center">
+                <span class="text-3xl font-bold {% if student.Grade == 'F' %}text-red-500{% elif student.Grade == 'D' %}text-orange-500{% else %}text-green-500{% endif %}">{{ student.Grade }}</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Academic Performance -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="text-lg font-semibold mb-4">Academic Performance</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Attendance</span>
+                        <span>{{ student.Attendance }}%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Midterm Score</span>
+                        <span>{{ student.Midterm_Score }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Final Score</span>
+                        <span>{{ student.Final_Score }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Assignments Average</span>
+                        <span>{{ student.Assignments_Average }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Quizzes Average</span>
+                        <span>{{ student.Quizzes_Average }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Participation Score</span>
+                        <span>{{ student.Participation_Score }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Projects Score</span>
+                        <span>{{ student.Projects_Score }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Analysis -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="text-lg font-semibold mb-4">Risk Analysis</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Risk Score</span>
+                        <span class="{% if student.Risk_Score >= 0.5 %}text-red-500{% else %}text-green-500{% endif %}">{{ "%.2f"|format(student.Risk_Score * 100) }}%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Risk Prediction</span>
+                        <span class="{% if student.Prediction == 'At Risk' %}text-red-500{% else %}text-green-500{% endif %}">{{ student.Prediction }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Study Hours per Week</span>
+                        <span>{{ student.Study_Hours_Per_Week }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Stress Level</span>
+                        <span>{{ student.Stress_Level }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Sleep Hours per Night</span>
+                        <span>{{ student.Sleep_Hours_Per_Night }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

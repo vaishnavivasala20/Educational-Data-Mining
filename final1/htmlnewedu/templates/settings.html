@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings - Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+
+    header {
+      background-color: #56416d;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 40px;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .logo i {
+      margin-right: 10px;
+      font-size: 24px;
+      color: #ffd97d;
+    }
+
+    nav {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #ffd97d;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .profile img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #fff;
+    }
+
+    footer {
+      background-color: #3e2e4d;
+      color: white;
+      padding: 40px 20px;
+    }
+
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 40px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .footer-column h4 {
+      margin-bottom: 15px;
+      font-size: 18px;
+      color: #ffd97d;
+    }
+
+    .footer-column p, .footer-column a {
+      font-size: 14px;
+      color: #ddd;
+      text-decoration: none;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .socials {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .socials i {
+      font-size: 18px;
+      margin: 0 10px;
+      color: #ffd97d;
+      transition: transform 0.3s ease;
+    }
+
+    .copyright {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 14px;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+
+  <!-- ✅ Sticky Header -->
+  <header>
+    <div class="logo">
+      <i class="fas fa-graduation-cap"></i> EduRisk AI
+    </div>
+    <nav>
+      <a href="{{ url_for('home') }}">🏠 Home</a>
+      <a href="{{ url_for('dashboard') }}">📊 Dashboard</a>
+      <a href="{{ url_for('students') }}">👨‍🎓 Students</a>
+      <a href="{{ url_for('reports') }}">📈 Reports</a>
+      <a href="{{ url_for('settings') }}">⚙️ Settings</a>
+      <a href="{{ url_for('help_page') }}">❓ Help</a>
+      <a href="{{ url_for('logout') }}">👤 Logout</a>
+    </nav>
+    <div class="profile">
+      <span>John Doe</span>
+      <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Pic"/>
+      <i class="fas fa-sign-out-alt"></i>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="max-w-4xl mx-auto px-6 py-10">
+    <div class="bg-white rounded-xl shadow p-6">
+      <div class="flex items-center gap-6">
+        <img id="profilePic" src="https://i.pravatar.cc/100" alt="User" class="w-20 h-20 rounded-full">
+        <div>
+          <input type="file" id="upload" class="hidden" onchange="changePhoto(event)">
+          <button onclick="document.getElementById('upload').click()" class="bg-gray-100 text-sm text-gray-700 px-4 py-2 rounded hover:bg-gray-200">
+            Change Photo
+          </button>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="mt-6 space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Name</label>
+          <input type="text" value="John Doe" class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm"/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Email</label>
+          <input type="email" value="john@example.com" class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm"/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Role</label>
+          <select class="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm">
+            <option selected>Administrator</option>
+            <option>Teacher</option>
+            <option>Counselor</option>
+          </select>
+        </div>
+        <button class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md">Save Changes</button>
+      </div>
+    </div>
+
+    <!-- Additional Settings -->
+    <div class="mt-8 grid gap-6">
+      <!-- Notifications -->
+      <div class="bg-white rounded-xl shadow p-6">
+        <h3 class="text-lg font-semibold mb-4">🔔 Notifications</h3>
+        <label class="flex justify-between items-center">
+          <span>Email Alerts</span>
+          <input type="checkbox" checked class="accent-indigo-600 h-5 w-5"/>
+        </label>
+        <label class="flex justify-between items-center mt-3">
+          <span>SMS Notifications</span>
+          <input type="checkbox" class="accent-indigo-600 h-5 w-5"/>
+        </label>
+      </div>
+
+      <!-- Security -->
+      <div class="bg-white rounded-xl shadow p-6">
+        <h3 class="text-lg font-semibold mb-4">🔒 Security</h3>
+        <label class="block mb-3">
+          <span>Change Password</span>
+          <input type="password" placeholder="••••••••" class="mt-1 w-full px-3 py-2 rounded-md border border-gray-300 shadow-sm"/>
+        </label>
+        <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">Update Password</button>
+      </div>
+
+      <!-- Preferences -->
+      <div class="bg-white rounded-xl shadow p-6">
+        <h3 class="text-lg font-semibold mb-4">⚙️ Preferences</h3>
+        <label class="block mb-3">
+          <span>Theme</span>
+          <select class="w-full mt-1 rounded-md border-gray-300 px-3 py-2 shadow-sm">
+            <option>Light</option>
+            <option>Dark</option>
+          </select>
+        </label>
+        <label class="block">
+          <span>Language</span>
+          <select class="w-full mt-1 rounded-md border-gray-300 px-3 py-2 shadow-sm">
+            <option selected>English</option>
+            <option>Telugu</option>
+            <option>Hindi</option>
+          </select>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Footer -->
+  <footer class="mt-12">
+    <div class="footer-container">
+      <div class="footer-column">
+        <h4>About EduRisk</h4>
+        <p>EduRisk AI helps identify at-risk students early through intelligent data analytics to improve academic outcomes.</p>
+      </div>
+      <div class="footer-column">
+        <h4>Quick Links</h4>
+        <a href="#">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Reports</a>
+        <a href="#">Help Center</a>
+      </div>
+      <div class="footer-column">
+        <h4>Contact Us</h4>
+        <p>Email: support@edurisk.ai</p>
+        <p>Phone: +91 98765 43210</p>
+        <p>Hyderabad, Telangana</p>
+      </div>
+    </div>
+    <div class="socials">
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+    <div class="copyright">
+      &copy; 2025 EduRisk AI. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    function changePhoto(event) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        document.getElementById('profilePic').src = reader.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  </script>
+</body>
+</html>

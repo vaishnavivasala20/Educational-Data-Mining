@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Help Center - EduRisk AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+
+    header {
+      background-color: #56416d;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 40px;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .logo i {
+      margin-right: 10px;
+      font-size: 24px;
+      color: #ffd97d;
+    }
+
+    nav {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #ffd97d;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .profile img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #fff;
+    }
+
+    /* Accordion Styles */
+    .accordion-item {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+
+    .accordion-header {
+      background: #f9fafb;
+      padding: 16px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.3s ease;
+    }
+
+    .accordion-header:hover {
+      background: #f3f4f6;
+    }
+
+    .accordion-header.active {
+      background: #667eea;
+      color: white;
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .accordion-content.active {
+      max-height: 500px;
+    }
+
+    .accordion-body {
+      padding: 20px;
+      background: white;
+    }
+
+    /* Risk Level Badges */
+    .risk-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .risk-badge.at-risk {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .risk-badge.safe {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .risk-badge.monitor {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    /* Contact Form Styles */
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background: #5a67d8;
+    }
+
+    footer {
+      background-color: #3e2e4d;
+      color: white;
+      padding: 40px 20px;
+    }
+
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 40px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .footer-column h4 {
+      margin-bottom: 15px;
+      font-size: 18px;
+      color: #ffd97d;
+    }
+
+    .footer-column p,
+    .footer-column a {
+      font-size: 14px;
+      color: #ddd;
+      text-decoration: none;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .socials {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .socials i {
+      font-size: 18px;
+      margin: 0 10px;
+      color: #ffd97d;
+      transition: transform 0.3s ease;
+    }
+
+    .copyright {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    /* Search Results Styles */
+    #searchResults {
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .search-result-item {
+      transition: all 0.2s ease;
+    }
+
+    .search-result-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    mark {
+      background: linear-gradient(120deg, #fef3c7 0%, #fde68a 100%);
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* Loading Animation */
+    .search-loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f4f6;
+      border-radius: 50%;
+      border-top-color: #667eea;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      nav {
+        justify-content: center;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      
+      #searchResults {
+        margin: 1rem 0;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- ✅ Sticky Header -->
+  <header>
+    <div class="logo">
+      <i class="fas fa-graduation-cap"></i> EduRisk AI
+    </div>
+    <nav>
+      <a href="{{ url_for('home') }}">🏠 Home</a>
+      <a href="{{ url_for('dashboard') }}">📊 Dashboard</a>
+      <a href="{{ url_for('students') }}">👨‍🎓 Students</a>
+      <a href="{{ url_for('reports') }}">📈 Reports</a>
+      <a href="{{ url_for('settings') }}">⚙️ Settings</a>
+      <a href="{{ url_for('help_page') }}">❓ Help</a>
+      <a href="{{ url_for('logout') }}">👤 Logout</a>
+    </nav>
+    <div class="profile">
+      <span>John Doe</span>
+      <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Pic"/>
+      <i class="fas fa-sign-out-alt"></i>
+    </div>
+  </header>
+
+  <!-- ✅ Help Center Content -->
+  <div class="px-6 py-10 max-w-7xl mx-auto">
+    <!-- Page Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Help & Documentation</h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Everything you need to know about using EduRisk AI for early detection of at-risk students
+      </p>
+    </div>
+
+    <!-- Search Section -->
+    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-8 rounded-2xl shadow-lg mb-12">
+      <h2 class="text-2xl font-semibold mb-4">How can we help you?</h2>
+      <div class="relative max-w-2xl mx-auto">
+        <input 
+          type="text"
+          id="helpSearch"
+          placeholder="🔍 Search for help topics..." 
+          class="w-full rounded-lg p-4 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
+        />
+      </div>
+    </div>
+
+    <!-- Quick Navigation -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <a href="#overview" class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition duration-300 text-center">
+        <div class="text-3xl mb-3">📋</div>
+        <h3 class="font-semibold text-gray-900">Overview</h3>
+        <p class="text-sm text-gray-600 mt-2">Project goals and objectives</p>
+      </a>
+      <a href="#how-to-use" class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition duration-300 text-center">
+        <div class="text-3xl mb-3">🎯</div>
+        <h3 class="font-semibold text-gray-900">How to Use</h3>
+        <p class="text-sm text-gray-600 mt-2">Step-by-step guides</p>
+      </a>
+      <a href="#risk-levels" class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition duration-300 text-center">
+        <div class="text-3xl mb-3">⚠️</div>
+        <h3 class="font-semibold text-gray-900">Risk Levels</h3>
+        <p class="text-sm text-gray-600 mt-2">Understanding risk assessment</p>
+      </a>
+      <a href="#faq" class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition duration-300 text-center">
+        <div class="text-3xl mb-3">❓</div>
+        <h3 class="font-semibold text-gray-900">FAQ</h3>
+        <p class="text-sm text-gray-600 mt-2">Frequently asked questions</p>
+      </a>
+    </div>
+
+    <!-- Overview Section -->
+    <section id="overview" class="mb-16">
+      <div class="bg-white rounded-2xl shadow-lg p-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+          <span class="text-3xl mr-3">📋</span>
+          Project Overview
+        </h2>
+        <div class="prose max-w-none">
+          <p class="text-lg text-gray-700 mb-6">
+            <strong>EduRisk AI</strong> is an advanced educational data mining system designed to identify at-risk students early in their academic journey. 
+            Our goal is to help educators and administrators intervene proactively to improve student outcomes and reduce dropout rates.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            <div class="text-center p-6 bg-blue-50 rounded-xl">
+              <div class="text-4xl mb-3">🎯</div>
+              <h3 class="font-semibold text-gray-900 mb-2">Early Detection</h3>
+              <p class="text-sm text-gray-600">Identify struggling students before it's too late</p>
+            </div>
+            <div class="text-center p-6 bg-green-50 rounded-xl">
+              <div class="text-4xl mb-3">📊</div>
+              <h3 class="font-semibold text-gray-900 mb-2">Data-Driven Insights</h3>
+              <p class="text-sm text-gray-600">AI-powered analysis of academic performance</p>
+            </div>
+            <div class="text-center p-6 bg-purple-50 rounded-xl">
+              <div class="text-4xl mb-3">🤝</div>
+              <h3 class="font-semibold text-gray-900 mb-2">Proactive Intervention</h3>
+              <p class="text-sm text-gray-600">Enable timely support and resources</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How to Use Section -->
+    <section id="how-to-use" class="mb-16">
+      <div class="bg-white rounded-2xl shadow-lg p-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+          <span class="text-3xl mr-3">🎯</span>
+          How to Use the System
+        </h2>
+        
+        <div class="space-y-8">
+          <!-- Dashboard Guide -->
+          <div class="border-l-4 border-indigo-500 pl-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">📊 Dashboard Navigation</h3>
+            <div class="space-y-4 text-gray-700">
+              <div class="flex items-start space-x-3">
+                <span class="bg-indigo-100 text-indigo-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold">1</span>
+                <div>
+                  <strong>View Overview:</strong> Start with the dashboard to see key metrics including total students, at-risk count, and risk percentage.
+                </div>
+              </div>
+              <div class="flex items-start space-x-3">
+                <span class="bg-indigo-100 text-indigo-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold">2</span>
+                <div>
+                  <strong>Monitor Trends:</strong> Check the charts and graphs to understand performance patterns across departments and time periods.
+                </div>
+              </div>
+              <div class="flex items-start space-x-3">
+                <span class="bg-indigo-100 text-indigo-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold">3</span>
+                <div>
+                  <strong>Identify Hotspots:</strong> Use the feature importance chart to understand which factors most influence student risk.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Student Data Guide -->
+          <div class="border-l-4 border-green-500 pl-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">👨‍🎓 Student Data Management</h3>
+            <div class="space-y-4 text-gray-700">
+              <div class="flex items-start space-x-3">
+                <span class="bg-green-100 text-green-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold">1</span>
+                <div>
+                  <strong>Browse Students:</strong> Navigate to the Students page to view all student records in an interactive table.
+                </div>
+              </div>
+              <div class="flex items-start space-x-3">
+                <span class="bg-green-100 text-green-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold">2</span>
+                <div>
+                  <strong>Filter & Search:</strong> Use the search bar and filters to find specific students by name, department, or risk level.
+                </div>
+              </div>
+              <div class="flex items-start space-x-3">
+                <span class="bg-green-100 text-green-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold">3</span>
+                <div>
+                  <strong>View Details:</strong> Click the eye icon next to any student to see detailed performance analysis and charts.
+                </div>
+              </div>
+              <div class="flex items-start space-x-3">
+                <span class="bg-green-100 text-green-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold">4</span>
+                <div>
+                  <strong>Export Data:</strong> Use the "Export CSV" button to download filtered student data for reporting.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reports Guide -->
+          <div class="border-l-4 border-purple-500 pl-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">📈 Reports & Analytics</h3>
+            <div class="space-y-4 text-gray-700">
+              <div class="flex items-start space-x-3">
+                <span class="bg-purple-100 text-purple-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold">1</span>
+                <div>
+                  <strong>Generate Reports:</strong> Visit the Reports page to access comprehensive analytics and visualizations.
+                </div>
+              </div>
+              <div class="flex items-start space-x-3">
+                <span class="bg-purple-100 text-purple-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold">2</span>
+                <div>
+                  <strong>Analyze Trends:</strong> Review department-wise risk percentages, grade distributions, and attendance patterns.
+                </div>
+              </div>
+              <div class="flex items-start space-x-3">
+                <span class="bg-purple-100 text-purple-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold">3</span>
+                <div>
+                  <strong>Track Progress:</strong> Monitor how interventions affect student performance over time.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Risk Levels Section -->
+    <section id="risk-levels" class="mb-16">
+      <div class="bg-white rounded-2xl shadow-lg p-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+          <span class="text-3xl mr-3">⚠️</span>
+          Risk Levels Explained
+        </h2>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Risk Level Table -->
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">Risk Assessment Criteria</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full border-collapse border border-gray-200">
+                <thead>
+                  <tr class="bg-gray-50">
+                    <th class="border border-gray-200 px-4 py-3 text-left font-semibold">Risk Level</th>
+                    <th class="border border-gray-200 px-4 py-3 text-left font-semibold">Criteria</th>
+                    <th class="border border-gray-200 px-4 py-3 text-left font-semibold">Action Required</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="border border-gray-200 px-4 py-3">
+                      <span class="risk-badge at-risk">At Risk</span>
+                    </td>
+                    <td class="border border-gray-200 px-4 py-3">
+                      • Attendance < 75%<br>
+                      • Total Score < 50<br>
+                      • Grade D or F<br>
+                      • Risk Score > 0.7
+                    </td>
+                    <td class="border border-gray-200 px-4 py-3">
+                      <strong>Immediate intervention required</strong><br>
+                      • Academic counseling<br>
+                      • Tutoring support<br>
+                      • Regular monitoring
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border border-gray-200 px-4 py-3">
+                      <span class="risk-badge monitor">Monitor</span>
+                    </td>
+                    <td class="border border-gray-200 px-4 py-3">
+                      • Attendance 75-85%<br>
+                      • Total Score 50-70<br>
+                      • Grade C<br>
+                      • Risk Score 0.4-0.7
+                    </td>
+                    <td class="border border-gray-200 px-4 py-3">
+                      <strong>Close monitoring</strong><br>
+                      • Regular check-ins<br>
+                      • Academic support<br>
+                      • Progress tracking
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border border-gray-200 px-4 py-3">
+                      <span class="risk-badge safe">Safe</span>
+                    </td>
+                    <td class="border border-gray-200 px-4 py-3">
+                      • Attendance > 85%<br>
+                      • Total Score > 70<br>
+                      • Grade A or B<br>
+                      • Risk Score < 0.4
+                    </td>
+                    <td class="border border-gray-200 px-4 py-3">
+                      <strong>Maintain current performance</strong><br>
+                      • Regular assessment<br>
+                      • Encourage excellence<br>
+                      • Provide challenges
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Risk Factors -->
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">Key Risk Factors</h3>
+            <div class="space-y-4">
+              <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+                <h4 class="font-semibold text-red-800 mb-2">High Impact Factors</h4>
+                <ul class="text-sm text-red-700 space-y-1">
+                  <li>• Attendance below 75%</li>
+                  <li>• Failing grades (D/F)</li>
+                  <li>• Low total scores (< 50)</li>
+                  <li>• Minimal study hours (< 5/week)</li>
+                </ul>
+              </div>
+              <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded">
+                <h4 class="font-semibold text-yellow-800 mb-2">Medium Impact Factors</h4>
+                <ul class="text-sm text-yellow-700 space-y-1">
+                  <li>• Attendance 75-85%</li>
+                  <li>• C grades</li>
+                  <li>• Moderate study hours (5-8/week)</li>
+                  <li>• Low project scores</li>
+                </ul>
+              </div>
+              <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                <h4 class="font-semibold text-green-800 mb-2">Positive Indicators</h4>
+                <ul class="text-sm text-green-700 space-y-1">
+                  <li>• High attendance (> 85%)</li>
+                  <li>• A/B grades</li>
+                  <li>• Strong project scores</li>
+                  <li>• Consistent study habits</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="mb-16">
+      <div class="bg-white rounded-2xl shadow-lg p-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+          <span class="text-3xl mr-3">❓</span>
+          Frequently Asked Questions
+        </h2>
+        
+        <div class="space-y-4">
+          <!-- FAQ Item 1 -->
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="font-semibold">How is a student marked as "At-Risk"?</span>
+              <i class="fas fa-chevron-down transition-transform"></i>
+            </div>
+            <div class="accordion-content">
+              <div class="accordion-body">
+                <p class="text-gray-700 mb-3">
+                  A student is classified as "At-Risk" based on multiple factors:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 space-y-1">
+                  <li>Attendance below 75%</li>
+                  <li>Total score less than 50 points</li>
+                  <li>Grades of D or F</li>
+                  <li>Risk score above 0.7 (70%)</li>
+                  <li>Study hours less than 5 per week</li>
+                </ul>
+                <p class="text-gray-700 mt-3">
+                  Our AI model analyzes these factors along with historical data to provide accurate risk assessments.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 2 -->
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="font-semibold">Can I edit student data in the system?</span>
+              <i class="fas fa-chevron-down transition-transform"></i>
+            </div>
+            <div class="accordion-content">
+              <div class="accordion-body">
+                <p class="text-gray-700">
+                  Currently, the system is designed for viewing and analyzing student data. Data modifications should be made in your primary student information system, and the data will be updated in EduRisk AI during the next sync cycle. This ensures data integrity and prevents conflicts.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 3 -->
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="font-semibold">How often is the risk assessment updated?</span>
+              <i class="fas fa-chevron-down transition-transform"></i>
+            </div>
+            <div class="accordion-content">
+              <div class="accordion-body">
+                <p class="text-gray-700">
+                  Risk assessments are updated in real-time as new data becomes available. The system processes:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 space-y-1 mt-3">
+                  <li>Daily attendance updates</li>
+                  <li>Weekly grade submissions</li>
+                  <li>Monthly performance reviews</li>
+                  <li>Quarterly comprehensive assessments</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 4 -->
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="font-semibold">What should I do when I identify an at-risk student?</span>
+              <i class="fas fa-chevron-down transition-transform"></i>
+            </div>
+            <div class="accordion-content">
+              <div class="accordion-body">
+                <p class="text-gray-700 mb-3">
+                  When you identify an at-risk student, follow these steps:
+                </p>
+                <ol class="list-decimal list-inside text-gray-700 space-y-2">
+                  <li><strong>Review Details:</strong> Click on the student's record to view their complete profile and performance analysis.</li>
+                  <li><strong>Contact Student:</strong> Reach out to discuss their challenges and offer support.</li>
+                  <li><strong>Academic Support:</strong> Arrange tutoring, study groups, or additional resources.</li>
+                  <li><strong>Regular Monitoring:</strong> Track their progress weekly and adjust interventions as needed.</li>
+                  <li><strong>Document Actions:</strong> Keep records of interventions and outcomes for future reference.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 5 -->
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="font-semibold">How accurate is the risk prediction model?</span>
+              <i class="fas fa-chevron-down transition-transform"></i>
+            </div>
+            <div class="accordion-content">
+              <div class="accordion-body">
+                <p class="text-gray-700">
+                  Our risk prediction model has been trained on extensive educational data and achieves approximately 85% accuracy. The model considers multiple factors including attendance patterns, academic performance, study habits, and historical trends. However, it's important to use this as a tool to guide interventions rather than make final decisions, as individual circumstances may vary.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 6 -->
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="font-semibold">Can I export reports for administrative purposes?</span>
+              <i class="fas fa-chevron-down transition-transform"></i>
+            </div>
+            <div class="accordion-content">
+              <div class="accordion-body">
+                <p class="text-gray-700">
+                  Yes! You can export data in several ways:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 space-y-1 mt-3">
+                  <li><strong>Student Data:</strong> Use the "Export CSV" button on the Students page to download filtered student records.</li>
+                  <li><strong>Reports:</strong> Generate comprehensive reports from the Reports page for administrative review.</li>
+                  <li><strong>Custom Filters:</strong> Apply specific filters before exporting to get targeted data sets.</li>
+                  <li><strong>Regular Updates:</strong> Set up automated reports for weekly or monthly administrative reviews.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Support Section -->
+    <section class="mb-16">
+      <div class="bg-white rounded-2xl shadow-lg p-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+          <span class="text-3xl mr-3">📞</span>
+          Contact Support
+        </h2>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Contact Information -->
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">Get in Touch</h3>
+            <div class="space-y-4">
+              <div class="flex items-center space-x-3">
+                <div class="bg-indigo-100 p-3 rounded-full">
+                  <i class="fas fa-envelope text-indigo-600"></i>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-900">Email Support</p>
+                  <p class="text-gray-600">support@edurisk.ai</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-3">
+                <div class="bg-green-100 p-3 rounded-full">
+                  <i class="fas fa-phone text-green-600"></i>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-900">Phone Support</p>
+                  <p class="text-gray-600">+91 98765 43210</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-3">
+                <div class="bg-purple-100 p-3 rounded-full">
+                  <i class="fas fa-clock text-purple-600"></i>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-900">Support Hours</p>
+                  <p class="text-gray-600">Mon-Fri: 9 AM - 6 PM IST</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-3">
+                <div class="bg-blue-100 p-3 rounded-full">
+                  <i class="fas fa-map-marker-alt text-blue-600"></i>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-900">Location</p>
+                  <p class="text-gray-600">Hyderabad, Telangana, India</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Form -->
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">Send us a Message</h3>
+            <form class="space-y-4">
+              <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <input type="text" id="name" name="name" class="form-input" required>
+              </div>
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input type="email" id="email" name="email" class="form-input" required>
+              </div>
+              <div>
+                <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                <select id="subject" name="subject" class="form-input">
+                  <option value="">Select a topic</option>
+                  <option value="technical">Technical Support</option>
+                  <option value="feature">Feature Request</option>
+                  <option value="bug">Bug Report</option>
+                  <option value="general">General Inquiry</option>
+                </select>
+              </div>
+              <div>
+                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                <textarea id="message" name="message" rows="4" class="form-input" placeholder="Describe your issue or question..." required></textarea>
+              </div>
+              <button type="submit" class="btn-primary w-full">
+                <i class="fas fa-paper-plane mr-2"></i>
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ✅ Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-column">
+        <h4>About EduRisk</h4>
+        <p>EduRisk AI helps identify at-risk students early through intelligent data analytics to improve academic outcomes.</p>
+      </div>
+      <div class="footer-column">
+        <h4>Quick Links</h4>
+        <a href="#">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Reports</a>
+        <a href="#">Help Center</a>
+      </div>
+      <div class="footer-column">
+        <h4>Contact Us</h4>
+        <p>Email: support@edurisk.ai</p>
+        <p>Phone: +91 98765 43210</p>
+        <p>Hyderabad, Telangana</p>
+      </div>
+    </div>
+    <div class="socials">
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+    <div class="copyright">
+      &copy; 2025 EduRisk AI. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    // Accordion functionality
+    function toggleAccordion(header) {
+      const content = header.nextElementSibling;
+      const icon = header.querySelector('i');
+      
+      // Toggle active class
+      header.classList.toggle('active');
+      content.classList.toggle('active');
+      
+      // Rotate icon
+      if (header.classList.contains('active')) {
+        icon.style.transform = 'rotate(180deg)';
+      } else {
+        icon.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    // Debounce function for search
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
+    // Enhanced Search functionality with debounce
+    const debouncedSearch = debounce(function(e) {
+      const searchTerm = e.target.value.toLowerCase().trim();
+      const searchResultsContainer = document.getElementById('searchResults');
+      
+      // Clear previous results
+      if (searchResultsContainer) {
+        searchResultsContainer.remove();
+      }
+      
+      if (searchTerm.length === 0) {
+        // Show all sections when search is empty
+        document.querySelectorAll('section').forEach(section => {
+          section.style.display = 'block';
+        });
+        return;
+      }
+      
+      // Hide all sections initially
+      document.querySelectorAll('section').forEach(section => {
+        section.style.display = 'none';
+      });
+      
+      // Create search results container
+      const resultsContainer = document.createElement('div');
+      resultsContainer.id = 'searchResults';
+      resultsContainer.className = 'bg-white rounded-2xl shadow-lg p-8 mb-8';
+      resultsContainer.innerHTML = `
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">🔍 Search Results for "${searchTerm}"</h3>
+        <div id="searchResultsList" class="space-y-4"></div>
+      `;
+      
+      // Insert results container after search bar
+      const searchSection = document.querySelector('.bg-gradient-to-r');
+      searchSection.parentNode.insertBefore(resultsContainer, searchSection.nextSibling);
+      
+      const resultsList = document.getElementById('searchResultsList');
+      let resultCount = 0;
+      
+      // Search through all content
+      const searchableElements = [
+        { selector: 'h2, h3', type: 'heading' },
+        { selector: '.accordion-header span', type: 'faq' },
+        { selector: 'p, li', type: 'content' },
+        { selector: 'td', type: 'table' }
+      ];
+      
+      searchableElements.forEach(({ selector, type }) => {
+        document.querySelectorAll(selector).forEach(element => {
+          const text = element.textContent.toLowerCase();
+          if (text.includes(searchTerm)) {
+            resultCount++;
+            
+            // Create result item
+            const resultItem = document.createElement('div');
+            resultItem.className = 'border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors';
+            
+            // Get the section this element belongs to
+            const section = element.closest('section');
+            const sectionTitle = section ? section.querySelector('h2')?.textContent || 'Help Content' : 'Help Content';
+            
+            // Highlight the matching text
+            const highlightedText = element.textContent.replace(
+              new RegExp(searchTerm, 'gi'),
+              match => `<mark class="bg-yellow-200 px-1 rounded">${match}</mark>`
+            );
+            
+            resultItem.innerHTML = `
+              <div class="flex items-start justify-between">
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="text-sm font-medium text-gray-500">${sectionTitle}</span>
+                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">${type}</span>
+                  </div>
+                  <div class="text-gray-700">${highlightedText}</div>
+                </div>
+                <button onclick="scrollToElement(this)" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                  View →
+                </button>
+              </div>
+            `;
+            
+            // Store reference to original element
+            resultItem.dataset.targetElement = element.closest('section')?.id || '';
+            
+            resultsList.appendChild(resultItem);
+          }
+        });
+      });
+      
+      // Show relevant sections
+      document.querySelectorAll('section').forEach(section => {
+        const text = section.textContent.toLowerCase();
+        if (text.includes(searchTerm)) {
+          section.style.display = 'block';
+        }
+      });
+      
+      // Update results count
+      if (resultCount === 0) {
+        resultsList.innerHTML = `
+          <div class="text-center py-8 text-gray-500">
+            <div class="text-4xl mb-4">🔍</div>
+            <p class="text-lg">No results found for "${searchTerm}"</p>
+            <p class="text-sm mt-2">Try different keywords or check the spelling</p>
+          </div>
+        `;
+      } else {
+        const resultsHeader = resultsContainer.querySelector('h3');
+        resultsHeader.textContent = `🔍 Search Results for "${searchTerm}" (${resultCount} results)`;
+      }
+    });
+    
+    // Function to scroll to element
+    function scrollToElement(button) {
+      const resultItem = button.closest('.border');
+      const targetId = resultItem.dataset.targetElement;
+      
+      if (targetId) {
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+          // Show the section
+          document.querySelectorAll('section').forEach(section => {
+            section.style.display = 'block';
+          });
+          
+          // Scroll to the section
+          targetSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+          
+          // Highlight the section briefly
+          targetSection.style.backgroundColor = '#fef3c7';
+          setTimeout(() => {
+            targetSection.style.backgroundColor = '';
+          }, 2000);
+        }
+             }
+     }
+    
+     // Add event listener for search
+     document.getElementById('helpSearch').addEventListener('input', debouncedSearch);
+    
+     // Add suggested search terms
+     const searchInput = document.getElementById('helpSearch');
+     const suggestions = [
+       'at-risk', 'risk levels', 'dashboard', 'students', 'reports', 
+       'export', 'filter', 'search', 'FAQ', 'contact', 'support'
+     ];
+     
+     // Create suggestions container
+     const suggestionsContainer = document.createElement('div');
+     suggestionsContainer.className = 'mt-4 flex flex-wrap gap-2';
+     suggestionsContainer.innerHTML = `
+       <span class="text-sm text-white opacity-80">Popular searches:</span>
+       ${suggestions.map(term => 
+         `<button class="text-xs bg-white bg-opacity-20 hover:bg-opacity-30 px-3 py-1 rounded-full transition-all" onclick="searchInput.value='${term}'; debouncedSearch({target: searchInput})">${term}</button>`
+       ).join('')}
+     `;
+     
+     // Add suggestions to search section
+     const searchSection = document.querySelector('.bg-gradient-to-r');
+     searchSection.appendChild(suggestionsContainer);
+    
+     // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Form submission
+    document.querySelector('form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Thank you for your message! We will get back to you soon.');
+      this.reset();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Risk Analytics Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .card {
+      background-color: #fff;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 8px 0 rgba(0,0,0,0.07);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .chart-container { min-height: 300px; }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold mb-8 text-center text-indigo-800">Student Risk Analytics Dashboard</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- 1. Risk Distribution -->
+      <div class="card">
+        <h2 class="text-xl font-semibold mb-2">Risk Distribution</h2>
+        <div class="chart-container"><canvas id="riskDistributionChart"></canvas></div>
+      </div>
+      <!-- 2. Department-wise Risk Percentage -->
+      <div class="card">
+        <h2 class="text-xl font-semibold mb-2">Department-wise Risk Percentage</h2>
+        <div class="chart-container"><canvas id="deptRiskChart"></canvas></div>
+      </div>
+      <!-- 3. Attendance Buckets vs Average Risk Score -->
+      <div class="card">
+        <h2 class="text-xl font-semibold mb-2">Average Risk Score by Attendance Range</h2>
+        <div class="chart-container"><canvas id="attendanceBucketChart"></canvas></div>
+      </div>
+      <!-- 4. Study Hours Buckets vs At-Risk Percentage -->
+      <div class="card">
+        <h2 class="text-xl font-semibold mb-2">% At-Risk Students by Study Hours Group</h2>
+        <div class="chart-container"><canvas id="studyHourRiskChart"></canvas></div>
+      </div>
+      <!-- 5. Grade Distribution -->
+      <div class="card">
+        <h2 class="text-xl font-semibold mb-2">Grade Distribution</h2>
+        <div class="chart-container"><canvas id="gradeDistributionChart"></canvas></div>
+      </div>
+      <!-- 6. Feature Impact (Model Importances) -->
+      <div class="card">
+        <h2 class="text-xl font-semibold mb-2">Feature Impact (Model Importances)</h2>
+        <div class="chart-container"><canvas id="featureImpactChart"></canvas></div>
+      </div>
+      <!-- 7. Average Risk Score by Grade -->
+      <div class="card">
+        <h2 class="text-xl font-semibold mb-2">Average Risk Score by Grade</h2>
+        <div class="chart-container"><canvas id="avgRiskByGradeChart"></canvas></div>
+      </div>
+      <!-- 8. Top 10 At-Risk Students -->
+      <div class="card">
+        <h2 class="text-xl font-semibold mb-2">Top 10 At-Risk Students</h2>
+        <div class="chart-container"><canvas id="topRiskStudentsChart"></canvas></div>
+        <div id="topRiskStudentsTable" class="mt-4"></div>
+      </div>
+      <!-- 9. Risk by Sleep Hours -->
+      <div class="card">
+        <h2 class="text-xl font-semibold mb-2">Risk by Sleep Hours</h2>
+        <div class="chart-container"><canvas id="riskBySleepChart"></canvas></div>
+      </div>
+      <!-- 10. Department-wise Average Study Hours -->
+      <div class="card">
+        <h2 class="text-xl font-semibold mb-2">Department-wise Average Study Hours</h2>
+        <div class="chart-container"><canvas id="deptStudyHoursChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Data from Flask
+    const riskPieData = {{ risk_pie_data | tojson | safe }};
+    const deptRiskData = {{ dept_risk_data | tojson | safe }};
+    const attendanceBucketData = {{ attendance_bucket_data | tojson | safe }};
+    const studyHourRiskData = {{ study_hour_risk_data | tojson | safe }};
+    const gradeDistData = {{ grade_dist_data | tojson | safe }};
+    const featureImportanceData = {{ feature_importance_data | tojson | safe }};
+    const avgRiskByGradeData = {{ avg_risk_by_grade_data | tojson | safe }};
+    const topRiskStudents = {{ top_risk_students | tojson | safe }};
+    const sleepRiskData = {{ sleep_risk_data | tojson | safe }};
+    const deptStudyHoursData = {{ dept_study_hours_data | tojson | safe }};
+
+    // 1. Risk Distribution (Doughnut)
+    if (riskPieData && riskPieData.labels && riskPieData.data && riskPieData.data.length > 0) {
+      new Chart(document.getElementById('riskDistributionChart'), {
+        type: 'doughnut',
+        data: {
+          labels: riskPieData.labels,
+          datasets: [{
+            data: riskPieData.data,
+            backgroundColor: ['#ef4444', '#22c55e'],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'bottom' },
+            title: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const value = context.parsed;
+                  const percent = total ? ((value / total) * 100).toFixed(1) : 0;
+                  return `${context.label}: ${value} (${percent}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+    } else {
+      document.getElementById('riskDistributionChart').parentNode.innerHTML = '<div class="text-gray-400">No data available.</div>';
+    }
+
+    // 2. Department-wise Risk Percentage (Bar)
+    if (deptRiskData && deptRiskData.labels && deptRiskData.data && deptRiskData.data.length > 0) {
+      new Chart(document.getElementById('deptRiskChart'), {
+        type: 'bar',
+        data: {
+          labels: deptRiskData.labels,
+          datasets: [{
+            label: '% At Risk',
+            data: deptRiskData.data,
+            backgroundColor: '#6366f1',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            title: { display: false }
+          },
+          scales: {
+            x: { title: { display: true, text: 'Department' } },
+            y: { title: { display: true, text: '% At Risk' }, beginAtZero: true, max: 100 }
+          }
+        }
+      });
+    } else {
+      document.getElementById('deptRiskChart').parentNode.innerHTML = '<div class="text-gray-400">No data available.</div>';
+    }
+
+    // 3. Attendance Buckets vs Average Risk Score (Bar)
+    if (attendanceBucketData && attendanceBucketData.labels && attendanceBucketData.data && attendanceBucketData.data.length > 0) {
+      new Chart(document.getElementById('attendanceBucketChart'), {
+        type: 'bar',
+        data: {
+          labels: attendanceBucketData.labels,
+          datasets: [{
+            label: 'Avg Risk Score',
+            data: attendanceBucketData.data,
+            backgroundColor: '#fbbf24',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            title: { display: false }
+          },
+          scales: {
+            x: { title: { display: true, text: 'Attendance Range' } },
+            y: { title: { display: true, text: 'Avg Risk Score' }, min: 0, max: 1 }
+          }
+        }
+      });
+    } else {
+      document.getElementById('attendanceBucketChart').parentNode.innerHTML = '<div class="text-gray-400">No data available.</div>';
+    }
+    // 4. Study Hours Buckets vs At-Risk Percentage (Bar)
+    if (studyHourRiskData && studyHourRiskData.labels && studyHourRiskData.data && studyHourRiskData.data.length > 0) {
+      new Chart(document.getElementById('studyHourRiskChart'), {
+        type: 'bar',
+        data: {
+          labels: studyHourRiskData.labels,
+          datasets: [{
+            label: '% At Risk',
+            data: studyHourRiskData.data,
+            backgroundColor: '#6366f1',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            title: { display: false }
+          },
+          scales: {
+            x: { title: { display: true, text: 'Study Hours Group' } },
+            y: { title: { display: true, text: '% At Risk' }, min: 0, max: 100 }
+          }
+        }
+      });
+    } else {
+      document.getElementById('studyHourRiskChart').parentNode.innerHTML = '<div class="text-gray-400">No data available.</div>';
+    }
+
+    // 5. Grade Distribution (Bar)
+    if (gradeDistData && gradeDistData.labels && gradeDistData.data && gradeDistData.data.length > 0) {
+      new Chart(document.getElementById('gradeDistributionChart'), {
+        type: 'bar',
+        data: {
+          labels: gradeDistData.labels,
+          datasets: [{
+            label: 'Students',
+            data: gradeDistData.data,
+            backgroundColor: '#f472b6',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            title: { display: false }
+          },
+          scales: {
+            x: { title: { display: true, text: 'Grade' } },
+            y: { title: { display: true, text: 'Number of Students' }, beginAtZero: true }
+          }
+        }
+      });
+    } else {
+      document.getElementById('gradeDistributionChart').parentNode.innerHTML = '<div class="text-gray-400">No data available.</div>';
+    }
+
+    // 6. Feature Impact (Horizontal Bar)
+    if (featureImportanceData && featureImportanceData.labels && featureImportanceData.data && featureImportanceData.data.length > 0) {
+      new Chart(document.getElementById('featureImpactChart'), {
+        type: 'bar',
+        data: {
+          labels: featureImportanceData.labels,
+          datasets: [{
+            label: 'Importance',
+            data: featureImportanceData.data,
+            backgroundColor: '#34d399',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            title: { display: false }
+          },
+          scales: {
+            x: { title: { display: true, text: 'Importance' }, beginAtZero: true },
+            y: { title: { display: true, text: 'Feature' } }
+          }
+        }
+      });
+    } else {
+      document.getElementById('featureImpactChart').parentNode.innerHTML = '<div class="text-gray-400">No data available.</div>';
+    }
+
+    // 7. Average Risk Score by Grade (Bar)
+    if (avgRiskByGradeData && avgRiskByGradeData.labels && avgRiskByGradeData.data && avgRiskByGradeData.data.length > 0) {
+      new Chart(document.getElementById('avgRiskByGradeChart'), {
+        type: 'bar',
+        data: {
+          labels: avgRiskByGradeData.labels,
+          datasets: [{
+            label: 'Avg Risk Score',
+            data: avgRiskByGradeData.data,
+            backgroundColor: '#818cf8',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            title: { display: false }
+          },
+          scales: {
+            x: { title: { display: true, text: 'Grade' } },
+            y: { title: { display: true, text: 'Avg Risk Score' }, min: 0, max: 1 }
+          }
+        }
+      });
+    } else {
+      document.getElementById('avgRiskByGradeChart').parentNode.innerHTML = '<div class="text-gray-400">No data available.</div>';
+    }
+
+    // 8. Top 10 At-Risk Students (Horizontal Bar + Table)
+    if (topRiskStudents && topRiskStudents.length > 0) {
+      // Horizontal Bar
+      new Chart(document.getElementById('topRiskStudentsChart'), {
+        type: 'bar',
+        data: {
+          labels: topRiskStudents.map(s => `${s.name} (${s.id})`),
+          datasets: [{
+            label: 'Risk Score',
+            data: topRiskStudents.map(s => s.score),
+            backgroundColor: '#f87171',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            title: { display: false }
+          },
+          scales: {
+            x: { title: { display: true, text: 'Risk Score' }, min: 0, max: 1 },
+            y: { title: { display: true, text: 'Student' } }
+          }
+        }
+      });
+      // Table
+      let tableHtml = `<table class='min-w-full text-sm text-left mt-2'><thead><tr class='bg-gray-100'><th class='px-2 py-1'>Name</th><th class='px-2 py-1'>ID</th><th class='px-2 py-1'>Risk Score</th></tr></thead><tbody>`;
+      tableHtml += topRiskStudents.map(s => `<tr class='border-b'><td class='px-2 py-1'>${s.name}</td><td class='px-2 py-1'>${s.id}</td><td class='px-2 py-1'>${s.score}</td></tr>`).join('');
+      tableHtml += '</tbody></table>';
+      document.getElementById('topRiskStudentsTable').innerHTML = tableHtml;
+    } else {
+      document.getElementById('topRiskStudentsChart').parentNode.innerHTML = '<div class="text-gray-400">No data available.</div>';
+    }
+
+    // 9. Risk by Sleep Hours (Bar)
+    if (sleepRiskData && sleepRiskData.labels && sleepRiskData.data && sleepRiskData.data.length > 0) {
+      new Chart(document.getElementById('riskBySleepChart'), {
+        type: 'bar',
+        data: {
+          labels: sleepRiskData.labels,
+          datasets: [{
+            label: 'Avg Risk Score',
+            data: sleepRiskData.data,
+            backgroundColor: '#fbbf24',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            title: { display: false }
+          },
+          scales: {
+            x: { title: { display: true, text: 'Sleep Hours (bucket)' } },
+            y: { title: { display: true, text: 'Avg Risk Score' }, min: 0, max: 1 }
+          }
+        }
+      });
+    } else {
+      document.getElementById('riskBySleepChart').parentNode.innerHTML = '<div class="text-gray-400">No data available.</div>';
+    }
+
+    // 10. Department-wise Average Study Hours (Bar)
+    if (deptStudyHoursData && deptStudyHoursData.labels && deptStudyHoursData.data && deptStudyHoursData.data.length > 0) {
+      new Chart(document.getElementById('deptStudyHoursChart'), {
+        type: 'bar',
+        data: {
+          labels: deptStudyHoursData.labels,
+          datasets: [{
+            label: 'Avg Study Hours',
+            data: deptStudyHoursData.data,
+            backgroundColor: '#60a5fa',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            title: { display: false }
+          },
+          scales: {
+            x: { title: { display: true, text: 'Department' } },
+            y: { title: { display: true, text: 'Avg Study Hours' }, beginAtZero: true }
+          }
+        }
+      });
+    } else {
+      document.getElementById('deptStudyHoursChart').parentNode.innerHTML = '<div class="text-gray-400">No data available.</div>';
+    }
+  </script>
+</body>
+</html>

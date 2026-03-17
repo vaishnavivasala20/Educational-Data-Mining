@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard | EduRisk AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+      font-family: 'Inter', sans-serif;
+    }
+
+    header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #56416d;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 40px;
+  flex-wrap: wrap;
+}
+
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .logo i {
+      margin-right: 10px;
+      font-size: 24px;
+      color: #ffd97d;
+    }
+
+    nav {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #ffd97d;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .profile img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #fff;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-[Inter]">
+
+  <!-- ✅ Header copied from home.html -->
+  <header>
+    <div class="logo">
+      <i class="fas fa-graduation-cap"></i> EduRisk AI
+    </div>
+    <nav>
+      <a href="{{ url_for('home') }}">🏠 Home</a>
+      <a href="{{ url_for('dashboard') }}">📊 Dashboard</a>
+      <a href="{{ url_for('students') }}">👨‍🎓 Students</a>
+      <a href="{{ url_for('reports') }}">📈 Reports</a>
+      <a href="{{ url_for('settings') }}">⚙️ Settings</a>
+      <a href="{{ url_for('help_page') }}">❓ Help</a>
+      <a href="{{ url_for('logout') }}">👤 Logout</a>
+    </nav>
+    <div class="profile">
+      <span>John Doe</span>
+      <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Pic"/>
+      <i class="fas fa-sign-out-alt"></i>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="max-w-7xl mx-auto px-6 py-10">
+
+    <!-- Main Section -->
+    <main class="p-6 space-y-6 bg-white rounded-xl shadow">
+      <h2 class="text-3xl font-bold text-[#3e245f]">Student Risk Analytics</h2>
+
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-[#f5f5f5] p-6 rounded-lg">
+          <h3 class="text-xl font-semibold mb-2">Total Students</h3>
+          <p class="text-3xl font-bold">{{ total_students }}</p>
+        </div>
+        <div class="bg-[#f5f5f5] p-6 rounded-lg">
+          <h3 class="text-xl font-semibold mb-2">At Risk Students</h3>
+          <p class="text-3xl font-bold text-red-500">{{ at_risk_count }}</p>
+        </div>
+        <div class="bg-[#f5f5f5] p-6 rounded-lg">
+          <h3 class="text-xl font-semibold mb-2">Risk Percentage</h3>
+          <p class="text-3xl font-bold">{{ "%.1f"|format(risk_percentage) }}%</p>
+        </div>
+      </div>
+
+      <!-- Feature Importance -->
+      <div class="bg-[#f5f5f5] rounded-lg p-6">
+        <h3 class="text-xl font-semibold mb-4">Feature Importance</h3>
+        <div class="space-y-3">
+          {% for feature in feature_importances %}
+          <div class="flex items-center justify-between">
+            <span class="text-gray-600">{{ feature.feature }}</span>
+            <div class="flex-1 h-2 bg-gray-200 rounded-full">
+              <div class="h-2 bg-blue-500 rounded-full" style="width: {{feature.importance * 100 }}%"></div>
+            </div>
+            <span class="text-gray-600">{{ "%.2f"|format(feature.importance) }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Top At-Risk Students -->
+      <div class="bg-[#f5f5f5] rounded-lg p-6">
+        <h3 class="text-xl font-semibold mb-4">Top At-Risk Students</h3>
+        <div class="space-y-3">
+          {% for student in top_risk_students %}
+          <div class="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm">
+            <div>
+              <h4 class="font-semibold">{{ student.First_Name }} {{ student.Last_Name }}</h4>
+              <p class="text-sm text-gray-600">Student ID: {{ student.Student_ID }}</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-red-500 font-semibold">{{ "%.2f"|format(student.Risk_Score * 100) }}%</span>
+              <span class="text-xs text-gray-500">{{ student.Grade }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Student ID Risk Prediction Section -->
+      <div class="bg-[#f5f5f5] rounded-lg p-6 mb-6">
+        <h3 class="text-xl font-semibold mb-4">Check Student Risk by ID</h3>
+        <form id="studentIdForm" class="flex flex-col md:flex-row gap-4 items-center">
+          <input type="text" id="studentIdInput" class="p-2 border rounded w-full md:w-64" placeholder="Enter Student ID (e.g., S1001)" required>
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Fetch & Predict</button>
+        </form>
+        <div id="studentResult" class="mt-4 hidden bg-white border border-gray-200 rounded p-4"></div>
+      </div>
+
+      <!-- Department Risk Analytics Section -->
+      <div class="bg-[#f5f5f5] rounded-lg p-6 mb-6">
+        <h3 class="text-xl font-semibold mb-4">Department Risk Analytics</h3>
+        <form id="departmentForm" class="flex flex-col md:flex-row gap-4 items-center">
+          <select id="departmentSelect" class="p-2 border rounded w-full md:w-64" required>
+            <option value="" disabled selected>Select Department</option>
+            <option value="CS">CS</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Business">Business</option>
+            <option value="Mathematics">Mathematics</option>
+          </select>
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Analyze</button>
+        </form>
+        <div id="departmentSpinner" class="mt-4 flex justify-center hidden">
+          <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+        <div id="departmentResult" class="mt-4 hidden bg-white border border-gray-200 rounded p-4"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Footer remains unchanged -->
+  <footer class="mt-16 bg-white border-t pt-10 pb-6 text-sm text-gray-600">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div>
+        <h3 class="text-xl font-bold text-[#3e245f]">EduRisk AI</h3>
+        <p class="mt-2 text-gray-500">Empowering institutions with insights to detect and support at-risk students early.</p>
+      </div>
+      <div>
+        <h4 class="text-md font-semibold text-[#3e245f] mb-2">Quick Links</h4>
+        <ul class="space-y-1">
+          <li><a href="{{ url_for('home') }}" class="hover:text-[#7a5da0] transition">Home</a></li>
+          <li><a href="{{ url_for('dashboard') }}" class="hover:text-[#7a5da0] transition">Dashboard</a></li>
+          <li><a href="{{ url_for('students') }}" class="hover:text-[#7a5da0] transition">Students</a></li>
+          <li><a href="{{ url_for('reports') }}" class="hover:text-[#7a5da0] transition">Reports</a></li>
+          <li><a href="{{ url_for('settings') }}" class="hover:text-[#7a5da0] transition">Settings</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-md font-semibold text-[#3e245f] mb-2">Contact Us</h4>
+        <p class="text-gray-500">Email: <a href="mailto:support@edurisk.ai" class="text-[#7a5da0]">support@edurisk.ai</a></p>
+        <p class="text-gray-500">Phone: +91 98765 43210</p>
+        <div class="flex space-x-4 mt-3">
+          <a href="#"><img src="https://img.icons8.com/ios-filled/20/3e245f/facebook.png"/></a>
+          <a href="#"><img src="https://img.icons8.com/ios-filled/20/3e245f/twitter.png"/></a>
+          <a href="#"><img src="https://img.icons8.com/ios-filled/20/3e245f/linkedin.png"/></a>
+          <a href="#"><img src="https://img.icons8.com/ios-filled/20/3e245f/instagram-new.png"/></a>
+        </div>
+      </div>
+    </div>
+    <div class="mt-10 text-center text-gray-400 text-xs">
+      © 2025 EduRisk AI. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    // Remove Predict Student Risk JS
+    // Student ID fetch and predict
+    document.getElementById('studentIdForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const studentId = document.getElementById('studentIdInput').value.trim();
+      const resultDiv = document.getElementById('studentResult');
+      resultDiv.classList.add('hidden');
+      resultDiv.innerHTML = '';
+      if (!studentId) return;
+      try {
+        const response = await fetch(`/predict_student/${studentId}`);
+        const data = await response.json();
+        if (data.error) {
+          resultDiv.innerHTML = `<span class='text-red-500 font-semibold'>${data.error}</span>`;
+        } else {
+          resultDiv.innerHTML = `
+            <div><b>Full Name:</b> ${data.Full_Name}</div>
+            <div><b>Department:</b> ${data.Department}</div>
+            <div><b>Attendance (%):</b> ${data.Attendance}</div>
+            <div><b>Project Score:</b> ${data.Project_Score}</div>
+            <div><b>Total Score:</b> ${data.Total_Score}</div>
+            <div><b>Study Hours/Week:</b> ${data.Study_Hours_per_Week}</div>
+            <div><b>Grade:</b> ${data.Grade}</div>
+            <div><b>Prediction:</b> <span class='${data.Prediction === 'At Risk' ? 'text-red-500' : 'text-green-500'} font-semibold'>${data.Prediction}</span></div>
+            <div><b>Risk Score:</b> ${data.Risk_Score.toFixed(2)}</div>
+          `;
+        }
+        resultDiv.classList.remove('hidden');
+      } catch (err) {
+        resultDiv.innerHTML = `<span class='text-red-500 font-semibold'>Error fetching student data.</span>`;
+        resultDiv.classList.remove('hidden');
+      }
+    });
+
+    // Department analytics fetch
+    document.getElementById('departmentForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const deptSelect = document.getElementById('departmentSelect');
+      const dept = deptSelect.options[deptSelect.selectedIndex].value;
+      const resultDiv = document.getElementById('departmentResult');
+      const spinner = document.getElementById('departmentSpinner');
+      resultDiv.classList.add('hidden');
+      resultDiv.innerHTML = '';
+      spinner.classList.remove('hidden');
+      if (!dept) {
+        spinner.classList.add('hidden');
+        resultDiv.innerHTML = `<span class='text-red-500 font-semibold'>Please select a department.</span>`;
+        resultDiv.classList.remove('hidden');
+        return;
+      }
+      try {
+        const response = await fetch(`/predict_department/${encodeURIComponent(dept)}`);
+        if (!response.ok) {
+          const data = await response.json().catch(() => null);
+          spinner.classList.add('hidden');
+          if (data && data.error) {
+            resultDiv.innerHTML = `<span class='text-red-500 font-semibold'>${data.error}</span>`;
+          } else {
+            resultDiv.innerHTML = `<span class='text-red-500 font-semibold'>Server error: ${response.status} ${response.statusText}</span>`;
+          }
+          resultDiv.classList.remove('hidden');
+          return;
+        }
+        const data = await response.json();
+        spinner.classList.add('hidden');
+        if (data.error) {
+          resultDiv.innerHTML = `<span class='text-red-500 font-semibold'>${data.error}</span>`;
+        } else {
+          let tableHtml = '';
+          if (data.at_risk_students && data.at_risk_students.length > 0) {
+            tableHtml = `<div class='overflow-x-auto max-h-96'><table id='atRiskTable' class='w-full mt-2 text-sm border rounded overflow-hidden'><thead><tr class='bg-gray-100'><th class='text-left p-2'>Student ID</th><th class='text-left p-2'>Full Name</th><th class='text-left p-2'>Department</th><th class='text-left p-2'>Grade</th><th class='text-left p-2'>Risk Score</th></tr></thead><tbody>`;
+            data.at_risk_students.forEach(s => {
+              tableHtml += `<tr class='border-t'><td class='p-2'>${s.Student_ID}</td><td class='p-2'>${s.Full_Name}</td><td class='p-2'>${s.Department}</td><td class='p-2'>${s.Grade}</td><td class='p-2'>${(s.Risk_Score*100).toFixed(1)}%</td></tr>`;
+            });
+            tableHtml += '</tbody></table></div>';
+            // Add search box
+            tableHtml = `<input type='text' id='atRiskSearch' placeholder='Search students...' class='mb-2 p-2 border rounded w-full md:w-1/2' />` + tableHtml;
+          } else {
+            tableHtml = '<div class="text-gray-500">No at-risk students found.</div>';
+          }
+          resultDiv.innerHTML = `
+            <div class='bg-white rounded shadow p-4'>
+              <div class='mb-2'><b>Total Students:</b> ${data.total_students}</div>
+              <div class='mb-2'><b>At Risk Students:</b> ${data.at_risk_count}</div>
+              <div class='mb-2'><b>Risk Percentage:</b> ${data.risk_percentage.toFixed(1)}%</div>
+              <div class='mt-2'><b>At Risk Students:</b>${tableHtml}</div>
+            </div>
+          `;
+          // Add search functionality
+          if (data.at_risk_students && data.at_risk_students.length > 0) {
+            const searchInput = resultDiv.querySelector('#atRiskSearch');
+            const table = resultDiv.querySelector('#atRiskTable');
+            searchInput.addEventListener('input', function() {
+              const filter = this.value.toLowerCase();
+              Array.from(table.tBodies[0].rows).forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(filter) ? '' : 'none';
+              });
+            });
+          }
+        }
+        resultDiv.classList.remove('hidden');
+      } catch (err) {
+        spinner.classList.add('hidden');
+        resultDiv.innerHTML = `<span class='text-red-500 font-semibold'>Failed to fetch department data. ${err.message ? err.message : ''}</span>`;
+        resultDiv.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
